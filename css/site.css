@@ -100,8 +100,11 @@ a:hover{color:#ffce81;}
   transition:transform var(--duration-fast) var(--ease-standard);
 }
 #va-nav a.active{background-image:var(--gradient-ember);transform:scale(1.06);}
-#va-nav:hover a.active:not(:hover){background-image:var(--gradient-gold);transform:scale(1);}
-#va-nav a:hover{background-image:var(--gradient-ember);transform:scale(1.06);}
+@media (hover:hover){
+  #va-nav:hover a.active:not(:hover){background-image:var(--gradient-gold);transform:scale(1);}
+  #va-nav a:hover{background-image:var(--gradient-ember);transform:scale(1.06);}
+}
+#va-nav a{-webkit-tap-highlight-color:transparent;touch-action:manipulation;}
 
 /* commissions gallery hover (zoomed at rest, relaxes on hover) */
 #commissions-gallery img{
