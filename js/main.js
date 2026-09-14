@@ -69,6 +69,7 @@
   }
   navLinks.forEach(function (a, i) {
     a.addEventListener('click', function (e) { e.preventDefault(); scrollToSection(i); });
+    a.addEventListener('touchend', function (e) { e.preventDefault(); scrollToSection(i); }, { passive: false });
   });
   var logo = document.getElementById('logo-home');
   if (logo) logo.addEventListener('click', function () {
