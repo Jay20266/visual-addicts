@@ -142,7 +142,7 @@
     if (!el || el._vaMap || !window.google || !window.google.maps) return;
     var pos = { lat: 41.38316, lng: 2.16554 };
     var map = new google.maps.Map(el, {
-      center: pos, zoom: 13, streetViewControl: false, mapTypeControl: false,
+      center: pos, zoom: 14, streetViewControl: false, mapTypeControl: false,
       styles: [
         { elementType: 'geometry', stylers: [{ color: '#0b0906' }] },
         { elementType: 'labels.text.fill', stylers: [{ color: '#ac7031' }] },
@@ -162,9 +162,9 @@
       position: pos, map: map,
       title: 'Visual Addicts — c/o Unida Studio',
       icon: {
-        url: 'assets/va-mark-pin.png',
-        scaledSize: new google.maps.Size(83, 47),
-        anchor: new google.maps.Point(42, 40)
+        url: 'assets/pin-glow.png',
+        scaledSize: new google.maps.Size(92, 64),
+        anchor: new google.maps.Point(46, 32)
       }
     });
     var btn = document.createElement('a');
