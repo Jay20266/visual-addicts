@@ -134,6 +134,73 @@ a:hover{color:#ffce81;}
 @keyframes va-cellfade{0%,45%{opacity:1}50%,95%{opacity:0}100%{opacity:1}}
 @keyframes va-cellfade-b{0%,45%{opacity:0}50%,95%{opacity:1}100%{opacity:0}}
 
+/* footer Instagram link */
+.ig-link{transition:color var(--duration-fast) var(--ease-standard);}
+.ig-link:hover{color:var(--ember-2);}
+
+/* ───────────── responsive: tablet ───────────── */
+@media (max-width:1024px){
+  section[id^="sec-"]{padding:32px 32px !important;}
+  /* equipment + commissions galleries: 3 columns */
+  #sec-capture div[style*="repeat(4,1fr)"]{grid-template-columns:repeat(3,1fr) !important;}
+  #commissions-gallery{grid-template-columns:repeat(3,1fr) !important;margin:0 -12px !important;}
+  /* clients wall: 4 columns */
+  #sec-clients div[style*="repeat(5,1fr)"]{grid-template-columns:repeat(4,1fr) !important;}
+}
+
+/* ───────────── responsive: phone ───────────── */
+@media (max-width:760px){
+  /* header: logo + wrapping nav, taller bar */
+  #site-header{height:auto !important;min-height:112px;padding:10px 20px 12px !important;flex-direction:column !important;align-items:flex-start !important;gap:8px !important;}
+  #site-header > div{flex:0 0 auto !important;width:100% !important;overflow:visible !important;right:0 !important;}
+  #logo-home{height:34px !important;width:auto !important;}
+  #va-nav{flex-wrap:wrap !important;justify-content:flex-start !important;gap:6px 16px !important;}
+  #va-nav a{font-size:13px !important;letter-spacing:.12em !important;}
+  body > div[style*="padding-top:72px"]{padding-top:112px !important;}
+
+  /* hero: show the whole rig, no cropping */
+  section[data-screen-label="Hero"]{height:auto !important;min-height:0 !important;}
+  section[data-screen-label="Hero"] img{width:100% !important;height:auto !important;}
+
+  /* section headers */
+  section[id^="sec-"]{padding:28px 20px !important;}
+  [data-va-hdr]{gap:14px !important;}
+  [data-va-hdr] img{height:38px !important;}
+  [data-va-hdr] h2{font-size:26px !important;}
+
+  /* body copy */
+  #sec-capture p,#sec-services p,#sec-contact p{font-size:16px !important;}
+  #sec-services h3{font-size:17px !important;}
+
+  /* galleries: 2 columns */
+  #sec-capture div[style*="repeat(4,1fr)"]{grid-template-columns:repeat(2,1fr) !important;gap:10px !important;}
+  #commissions-gallery{grid-template-columns:repeat(2,1fr) !important;margin:0 !important;gap:6px !important;}
+  /* services: single column */
+  #sec-services div[style*="repeat(2,1fr)"]{grid-template-columns:1fr !important;gap:28px !important;}
+  /* clients wall: 3 columns, shorter cells */
+  #sec-clients div[style*="repeat(5,1fr)"]{grid-template-columns:repeat(3,1fr) !important;gap:16px 18px !important;}
+  #sec-clients div[style*="height:80px"]{height:60px !important;}
+  #sec-clients img{max-height:34px !important;max-width:88px !important;}
+
+  /* contact ledger: stacked label + value */
+  #sec-contact div[style*="200px 1fr"]{grid-template-columns:1fr !important;gap:10px !important;padding:16px 0 !important;}
+  .contact-link{font-size:17px !important;}
+  .contact-link:hover{font-size:17px !important;}
+  #va-map{height:220px !important;}
+
+  /* lightbox: tap-friendly, smaller arrows */
+  #lb-prev,#lb-next{width:56px !important;}
+  #lb-prev svg,#lb-next svg{height:44px !important;}
+  #lightbox-img{max-width:92vw !important;}
+
+  footer{padding:24px 20px !important;}
+}
+
+/* touch devices: no hover-only states left stuck on */
+@media (hover:none){
+  #commissions-gallery img{transform:scale(1);}
+}
+
 /* section-header logo fade + gold shimmer */
 @keyframes va-hdr-fadein{from{opacity:0}to{opacity:1}}
 @keyframes va-shimmer{from{background-position:85% 0}to{background-position:12% 0}}
