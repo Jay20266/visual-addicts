@@ -163,8 +163,8 @@
       title: 'Visual Addicts — c/o Unida Studio',
       icon: {
         url: 'assets/pin-glow.png',
-        scaledSize: new google.maps.Size(92, 64),
-        anchor: new google.maps.Point(46, 32)
+        scaledSize: new google.maps.Size(115, 80),
+        anchor: new google.maps.Point(58, 40)
       }
     });
     var btn = document.createElement('a');
