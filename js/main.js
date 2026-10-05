@@ -17,6 +17,30 @@
   var GOOGLE_MAPS_KEY = 'AIzaSyBk1qtVhghFGVqhizp72DqdpDJf1MP1pSA';
   var SECTION_IDS = ['sec-capture', 'sec-services', 'sec-commissions', 'sec-clients', 'sec-contact'];
 
+  /* ---- hero: reveal background + GIF together, GIF starts on frame 1 ---- */
+  (function () {
+    var hero = document.getElementById('hero');
+    var gif = document.getElementById('hero-gif');
+    if (!hero || !gif) return;
+    var BG = 'uploads/chat2.png', GIF = 'assets/hero-loop.gif';
+    function load(src) {
+      return new Promise(function (res) {
+        var im = new Image();
+        im.onload = im.onerror = function () {
+          if (im.decode) im.decode().then(res, res); else res();
+        };
+        im.src = src;
+      });
+    }
+    Promise.all([load(BG), load(GIF)]).then(function () {
+      requestAnimationFrame(function () {
+        hero.style.backgroundImage = "url('" + BG + "')";
+        gif.src = GIF;                 /* assigned now, so playback starts from the first frame */
+        gif.style.visibility = 'visible';
+      });
+    });
+  })();
+
   var header = document.getElementById('site-header');
   var navLinks = Array.prototype.slice.call(document.querySelectorAll('#va-nav a'));
   var suppressUntil = 0;
