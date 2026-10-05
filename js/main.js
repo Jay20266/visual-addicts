@@ -2,6 +2,18 @@
 (function () {
   'use strict';
 
+  /* ---- content protection (deterrent) ---- */
+  document.addEventListener('contextmenu', function (e) { e.preventDefault(); });
+  document.addEventListener('dragstart', function (e) { if (e.target.tagName === 'IMG') e.preventDefault(); });
+  ['copy', 'cut', 'selectstart'].forEach(function (ev) {
+    document.addEventListener(ev, function (e) { e.preventDefault(); });
+  });
+  document.addEventListener('keydown', function (e) {
+    var k = (e.key || '').toLowerCase();
+    if ((e.ctrlKey || e.metaKey) && (k === 's' || k === 'u' || k === 'c' || k === 'a' || k === 'p')) e.preventDefault();
+  });
+  document.querySelectorAll('img').forEach(function (im) { im.setAttribute('draggable', 'false'); });
+
   var GOOGLE_MAPS_KEY = 'AIzaSyBk1qtVhghFGVqhizp72DqdpDJf1MP1pSA';
   var SECTION_IDS = ['sec-capture', 'sec-services', 'sec-commissions', 'sec-clients', 'sec-contact'];
 
