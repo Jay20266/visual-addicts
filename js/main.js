@@ -22,7 +22,7 @@
     var hero = document.getElementById('hero');
     var gif = document.getElementById('hero-gif');
     if (!hero || !gif) return;
-    var BG = 'uploads/chat2.png', GIF = 'assets/hero-loop.gif';
+    var BG = 'uploads/chat2.jpg', GIF = 'assets/hero-loop.gif';
     function load(src) {
       return new Promise(function (res) {
         var im = new Image();
