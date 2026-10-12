@@ -249,3 +249,8 @@ img{-webkit-user-drag:none;user-drag:none;pointer-events:auto;}
   body > div[style*="padding-top:72px"]{padding-top:140px !important;}
   #hero{height:calc(100vh - 140px) !important;}
 }
+
+/* iPads in portrait: the GIF stands on the same floor line as in landscape (hero bottom = background bottom) */
+@media (min-width:761px) and (max-width:1366px) and (orientation:portrait){
+  #hero{align-items:flex-end !important;}
+}
