@@ -128,6 +128,67 @@
   }, { threshold: 0.6 });
   document.querySelectorAll('[data-va-hdr]').forEach(function (el) { hdrObserver.observe(el); });
 
+  /* ---- tablet galleries: refill 4 column stacks into 3 even columns ---- */
+  var tabletMQ = window.matchMedia('(min-width:761px) and (max-width:1024px)');
+  var galleries = [];
+  var eqGrid = document.querySelector('#sec-capture div[style*="repeat(4,1fr)"]');
+  if (eqGrid) galleries.push(eqGrid);
+  var cmGrid = document.getElementById('commissions-gallery');
+  if (cmGrid) galleries.push(cmGrid);
+  galleries.forEach(function (g) {
+    g._origCols = Array.prototype.slice.call(g.children);
+    g._items = [];
+    var rows = Math.max.apply(null, g._origCols.map(function (c) { return c.children.length; }));
+    var perCol = g._origCols.map(function (c) { return Array.prototype.slice.call(c.children); });
+    perCol.forEach(function (list, ci) { list.forEach(function (el, ri) { el._vaHome = [ci, ri]; }); });
+    for (var r = 0; r < rows; r++) perCol.forEach(function (list) { if (list[r]) g._items.push(list[r]); });
+  });
+  function itemRatio(el) {
+    var img = el.tagName === 'IMG' ? el : el.querySelector('img');
+    return img && img.naturalWidth ? img.naturalHeight / img.naturalWidth : 1;
+  }
+  function layoutTablet(g) {
+    if (g._tabletCols) return;
+    var cols = [0, 1, 2].map(function () { return g._origCols[0].cloneNode(false); });
+    var h = [0, 0, 0];
+    g._items.forEach(function (el) {
+      var k = h.indexOf(Math.min.apply(null, h));
+      cols[k].appendChild(el);
+      h[k] += itemRatio(el);
+    });
+    g._origCols.forEach(function (c) { c.style.display = 'none'; });
+    cols.forEach(function (c) { g.appendChild(c); });
+    g._tabletCols = cols;
+  }
+  function layoutDesktop(g) {
+    if (!g._tabletCols) return;
+    var sorted = g._items.slice().sort(function (a, b) { return a._vaHome[1] - b._vaHome[1]; });
+    sorted.forEach(function (el) { g._origCols[el._vaHome[0]].appendChild(el); });
+    g._tabletCols.forEach(function (c) { c.remove(); });
+    g._origCols.forEach(function (c) { c.style.display = ''; });
+    g._tabletCols = null;
+  }
+  function applyGalleryLayout() {
+    galleries.forEach(function (g) { if (tabletMQ.matches) layoutTablet(g); else layoutDesktop(g); });
+  }
+  function whenImagesReady(cb) {
+    var imgs = [];
+    galleries.forEach(function (g) { imgs = imgs.concat(Array.prototype.slice.call(g.querySelectorAll('img'))); });
+    var pending = imgs.filter(function (im) { return !(im.complete && im.naturalWidth); });
+    if (!pending.length) return cb();
+    var left = pending.length;
+    pending.forEach(function (im) {
+      im.loading = 'eager';
+      var done = function () { if (--left === 0) cb(); };
+      im.addEventListener('load', done, { once: true });
+      im.addEventListener('error', done, { once: true });
+    });
+  }
+  if (galleries.length) {
+    whenImagesReady(applyGalleryLayout);
+    (tabletMQ.addEventListener ? tabletMQ.addEventListener('change', applyGalleryLayout) : tabletMQ.addListener(applyGalleryLayout));
+  }
+
   /* ---- commissions lightbox ---- */
   var lightbox = document.getElementById('lightbox');
   var lightboxImg = document.getElementById('lightbox-img');
