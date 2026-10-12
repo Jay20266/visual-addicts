@@ -128,6 +128,70 @@
   }, { threshold: 0.6 });
   document.querySelectorAll('[data-va-hdr]').forEach(function (el) { hdrObserver.observe(el); });
 
+  /* ---- flex-gap fallback for older Safari (iPadOS < 14.5 ignores gap on flex boxes) ---- */
+  var flexGapOK = (function () {
+    var d = document.createElement('div');
+    d.style.cssText = 'display:flex;flex-direction:column;row-gap:1px;position:absolute;visibility:hidden';
+    d.appendChild(document.createElement('div'));
+    d.appendChild(document.createElement('div'));
+    document.body.appendChild(d);
+    var ok = d.scrollHeight === 1;
+    d.remove();
+    return ok;
+  })();
+  function applyFlexGapFallback() {
+    if (flexGapOK) return;
+    document.querySelectorAll('[data-va-gap]').forEach(function (el) {
+      el.style.marginTop = el.dataset.vaMt; el.style.marginLeft = el.dataset.vaMl; el.style.marginRight = el.dataset.vaMr;
+      el.removeAttribute('data-va-gap');
+    });
+    var all = document.body.querySelectorAll('*');
+    for (var i = 0; i < all.length; i++) {
+      var box = all[i], cs = getComputedStyle(box);
+      if (cs.display !== 'flex' && cs.display !== 'inline-flex') continue;
+      var rg = parseFloat(cs.rowGap) || 0, cg = parseFloat(cs.columnGap) || 0;
+      if (!rg && !cg) continue;
+      var kids = Array.prototype.filter.call(box.children, function (k) {
+        return getComputedStyle(k).display !== 'none' && getComputedStyle(k).position !== 'absolute' && getComputedStyle(k).position !== 'fixed';
+      });
+      var col = cs.flexDirection.indexOf('column') === 0, wrap = cs.flexWrap !== 'nowrap';
+      var endAligned = cs.justifyContent === 'flex-end' || cs.justifyContent === 'end';
+      kids.forEach(function (k, j) {
+        k.dataset.vaMt = k.style.marginTop; k.dataset.vaMl = k.style.marginLeft; k.dataset.vaMr = k.style.marginRight;
+        k.setAttribute('data-va-gap', '');
+        if (col) { if (j > 0 && rg) k.style.marginTop = rg + 'px'; }
+        else if (wrap) { if (cg && j < kids.length - 1) k.style.marginRight = cg + 'px'; if (rg) k.style.marginTop = rg + 'px'; }
+        else if (cg && j > 0) { if (endAligned) k.style.marginLeft = cg + 'px'; else k.style.marginLeft = cg + 'px'; }
+      });
+    }
+  }
+  var gapTimer = null;
+  function scheduleFlexGapFallback() {
+    if (flexGapOK) return;
+    clearTimeout(gapTimer);
+    gapTimer = setTimeout(applyFlexGapFallback, 60);
+  }
+
+  /* ---- iPad landscape: menu gaps = half of the evenly-spread spacing ---- */
+  var navLandMQ = window.matchMedia('(min-width:1024px) and (max-width:1180px) and (orientation:landscape)');
+  function sizeNavGaps() {
+    var nav = document.getElementById('va-nav');
+    if (!nav) return;
+    if (!navLandMQ.matches) { nav.style.removeProperty('--va-nav-gap-tab'); return; }
+    var links = Array.prototype.slice.call(nav.children);
+    var textW = links.reduce(function (s, a) { return s + a.getBoundingClientRect().width; }, 0);
+    var free = nav.parentElement.clientWidth - textW;
+    var gap = Math.max(12, Math.floor(free / (links.length - 1) / 2));
+    nav.style.setProperty('--va-nav-gap-tab', gap + 'px');
+    scheduleFlexGapFallback();
+  }
+  sizeNavGaps();
+  window.addEventListener('resize', sizeNavGaps);
+  window.addEventListener('resize', scheduleFlexGapFallback);
+  window.addEventListener('orientationchange', scheduleFlexGapFallback);
+  applyFlexGapFallback();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(sizeNavGaps);
+
   /* ---- tablet galleries: refill 4 column stacks into 3 even columns ---- */
   var tabletMQ = window.matchMedia('(min-width:761px) and (max-width:1024px)');
   var galleries = [];
@@ -170,6 +234,7 @@
   }
   function applyGalleryLayout() {
     galleries.forEach(function (g) { if (tabletMQ.matches) layoutTablet(g); else layoutDesktop(g); });
+    scheduleFlexGapFallback();
   }
   function whenImagesReady(cb) {
     var imgs = [];
