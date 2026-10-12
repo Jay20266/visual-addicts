@@ -141,6 +141,9 @@ a:hover{color:#ffce81;}
 .ig-link{transition:color var(--duration-fast) var(--ease-standard);}
 .ig-link:hover{color:var(--ember-2);}
 
+/* hero GIF: never wider than the screen — scales down to show the whole rig */
+#hero-gif{max-width:100%;object-fit:contain;}
+
 /* ───────────── responsive: tablet ───────────── */
 @media (max-width:1024px){
   section[id^="sec-"]{padding:32px 32px !important;}
@@ -244,4 +247,5 @@ img{-webkit-user-drag:none;user-drag:none;pointer-events:auto;}
   #va-nav::after{content:"";flex-basis:100%;height:0;order:2;}
   #va-nav a:nth-child(n+3){order:3;}
   body > div[style*="padding-top:72px"]{padding-top:140px !important;}
+  #hero{height:calc(100vh - 140px) !important;}
 }
