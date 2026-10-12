@@ -253,4 +253,5 @@ img{-webkit-user-drag:none;user-drag:none;pointer-events:auto;}
 /* iPads in portrait: the GIF stands on the same floor line as in landscape (hero bottom = background bottom) */
 @media (min-width:761px) and (max-width:1366px) and (orientation:portrait){
   #hero{align-items:flex-end !important;}
+  #hero-gif{object-position:50% 100% !important;}
 }
