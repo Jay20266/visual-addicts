@@ -348,4 +348,24 @@
     s.onload = initMap;
     document.head.appendChild(s);
   }
+
+  /* ---- imprint / privacy overlay ---- */
+  (function () {
+    var legal = document.getElementById('legal');
+    if (!legal) return;
+    function open(e) { if (e) e.preventDefault(); legal.classList.add('open'); legal.scrollTop = 0; document.documentElement.classList.add('legal-open'); }
+    function close() { legal.classList.remove('open'); document.documentElement.classList.remove('legal-open'); if (location.hash === '#imprint') history.replaceState(null, '', location.pathname + location.search); }
+    document.getElementById('legal-open').addEventListener('click', open);
+    document.getElementById('legal-close').addEventListener('click', close);
+    window.addEventListener('keydown', function (e) { if (e.key === 'Escape' && legal.classList.contains('open')) close(); });
+    legal.querySelectorAll('#legal-lang button').forEach(function (b) {
+      b.addEventListener('click', function () {
+        legal.setAttribute('data-show', b.getAttribute('data-set'));
+        legal.querySelectorAll('#legal-lang button').forEach(function (x) { x.classList.toggle('on', x === b); });
+        legal.scrollTop = 0;
+      });
+    });
+    if ((navigator.language || '').toLowerCase().indexOf('es') === 0) legal.querySelector('[data-set="es"]').click();
+    if (location.hash === '#imprint') open();
+  })();
 })();
