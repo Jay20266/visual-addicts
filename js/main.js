@@ -22,7 +22,7 @@
     var hero = document.getElementById('hero');
     var gif = document.getElementById('hero-gif');
     if (!hero || !gif) return;
-    var BG = 'uploads/chat2.jpg', GIF = 'assets/hero-loop.gif';
+    var BG = 'uploads/warehouse13.jpg', GIF = 'assets/hero-loop.gif';
     function load(src) {
       return new Promise(function (res) {
         var im = new Image();
@@ -32,11 +32,36 @@
         im.src = src;
       });
     }
+    /* floor shadow: a black, blurred copy of the GIF squashed onto the floor line, so every piece of
+       equipment sits in its own soft pool of shadow (lit from the skylights above), in sync with the animation */
+    var FLOOR = 1034 / 1154, RATIO = 1639 / 1154;
+    var shadow = document.createElement('img');
+    shadow.alt = ''; shadow.setAttribute('aria-hidden', 'true');
+    shadow.style.cssText = 'position:absolute;pointer-events:none;object-fit:contain;filter:brightness(0) blur(38px);opacity:.3;visibility:hidden;z-index:0';
+    hero.style.position = 'relative';
+    gif.style.position = 'relative'; gif.style.zIndex = '1';
+    hero.insertBefore(shadow, gif);
+    function placeShadow() {
+      var bw = gif.offsetWidth, bh = gif.offsetHeight;
+      if (!bw || !bh) return;
+      var ch = Math.min(bh, bw / RATIO), top = (bh - ch) / 2;
+      shadow.style.left = gif.offsetLeft + 'px';
+      shadow.style.top = gif.offsetTop + 'px';
+      shadow.style.width = bw + 'px';
+      shadow.style.height = bh + 'px';
+      shadow.style.transformOrigin = '50% ' + (top + ch * FLOOR) + 'px';
+      shadow.style.transform = 'translateY(' + Math.max(2, ch * 0.006) + 'px) scaleY(0.07)';
+    }
+    window.addEventListener('resize', placeShadow);
     Promise.all([load(BG), load(GIF)]).then(function () {
       requestAnimationFrame(function () {
         hero.style.backgroundImage = "url('" + BG + "')";
         gif.src = GIF;                 /* assigned now, so playback starts from the first frame */
+        shadow.src = GIF;              /* same image, same moment: both play in step */
         gif.style.visibility = 'visible';
+        shadow.style.visibility = 'visible';
+        placeShadow();
+        setTimeout(placeShadow, 300);
       });
     });
   })();
