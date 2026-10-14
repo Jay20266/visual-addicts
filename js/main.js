@@ -147,7 +147,9 @@
     });
     var all = document.body.querySelectorAll('*');
     for (var i = 0; i < all.length; i++) {
-      var box = all[i], cs = getComputedStyle(box);
+      var box = all[i];
+      if (box.closest('#va-map, .gm-style')) continue; /* never touch Google Maps' own layout */
+      var cs = getComputedStyle(box);
       if (cs.display !== 'flex' && cs.display !== 'inline-flex') continue;
       var rg = parseFloat(cs.rowGap) || 0, cg = parseFloat(cs.columnGap) || 0;
       if (!rg && !cg) continue;
