@@ -14,7 +14,6 @@
   });
   document.querySelectorAll('img').forEach(function (im) { im.setAttribute('draggable', 'false'); });
 
-  var GOOGLE_MAPS_KEY = 'AIzaSyBk1qtVhghFGVqhizp72DqdpDJf1MP1pSA';
   var SECTION_IDS = ['sec-capture', 'sec-services', 'sec-commissions', 'sec-clients', 'sec-contact'];
 
   /* ---- hero: reveal background + GIF together, GIF starts on frame 1 ---- */
@@ -173,7 +172,6 @@
     var all = document.body.querySelectorAll('*');
     for (var i = 0; i < all.length; i++) {
       var box = all[i];
-      if (box.closest('#va-map, .gm-style')) continue; /* never touch Google Maps' own layout */
       var cs = getComputedStyle(box);
       if (cs.display !== 'flex' && cs.display !== 'inline-flex') continue;
       var rg = parseFloat(cs.rowGap) || 0, cg = parseFloat(cs.columnGap) || 0;
@@ -325,56 +323,6 @@
     else if (e.key === 'ArrowRight') lbStep(1);
   });
 
-  /* ---- Google Map (Gilded night theme, V/A pin, Open in Maps) ---- */
-  function initMap() {
-    var el = document.getElementById('va-map');
-    if (!el || el._vaMap || !window.google || !window.google.maps) return;
-    var pos = { lat: 41.38316, lng: 2.16554 };
-    var map = new google.maps.Map(el, {
-      center: pos, zoom: 14, streetViewControl: false, mapTypeControl: false,
-      styles: [
-        { elementType: 'geometry', stylers: [{ color: '#0b0906' }] },
-        { elementType: 'labels.text.fill', stylers: [{ color: '#ac7031' }] },
-        { elementType: 'labels.text.stroke', stylers: [{ color: '#050403' }] },
-        { featureType: 'poi', stylers: [{ visibility: 'off' }] },
-        { featureType: 'road', elementType: 'geometry', stylers: [{ color: '#2a2118' }] },
-        { featureType: 'road.arterial', elementType: 'geometry', stylers: [{ color: '#3a2d1e' }] },
-        { featureType: 'road.highway', elementType: 'geometry', stylers: [{ color: '#8d5a1b' }] },
-        { featureType: 'road.highway', elementType: 'geometry.stroke', stylers: [{ color: '#050403' }] },
-        { featureType: 'road', elementType: 'labels.text.fill', stylers: [{ color: '#e7aa51' }] },
-        { featureType: 'transit', stylers: [{ visibility: 'off' }] },
-        { featureType: 'water', elementType: 'geometry', stylers: [{ color: '#04070d' }] },
-        { featureType: 'water', elementType: 'labels.text.fill', stylers: [{ color: '#4a3518' }] }
-      ]
-    });
-    new google.maps.Marker({
-      position: pos, map: map,
-      title: 'Visual Addicts — c/o Unida Studio',
-      icon: {
-        url: 'assets/pin-glow.png',
-        scaledSize: new google.maps.Size(115, 80),
-        anchor: new google.maps.Point(58, 40)
-      }
-    });
-    var btn = document.createElement('a');
-    btn.href = 'https://www.google.com/maps/search/?api=1&query=Visual+Addicts,+Carrer+de+Joaquin+Costa+24,+08001+Barcelona,+Spain';
-    btn.target = '_blank';
-    btn.rel = 'noopener';
-    btn.textContent = 'Open in Maps';
-    btn.style.cssText = 'margin:10px;padding:8px 14px;background:#fff;color:#1a73e8;font:500 14px/1 Roboto,Arial,sans-serif;border-radius:2px;box-shadow:0 1px 4px rgba(0,0,0,.3);text-decoration:none;cursor:pointer';
-    map.controls[google.maps.ControlPosition.TOP_LEFT].push(btn);
-    el._vaMap = map;
-  }
-  if (window.google && window.google.maps) {
-    initMap();
-  } else {
-    var s = document.createElement('script');
-    s.id = 'va-gmaps-script';
-    s.src = 'https://maps.googleapis.com/maps/api/js?key=' + GOOGLE_MAPS_KEY;
-    s.async = true;
-    s.onload = initMap;
-    document.head.appendChild(s);
-  }
 
   /* ---- imprint / privacy overlay ---- */
   (function () {
