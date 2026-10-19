@@ -142,11 +142,14 @@ a:hover{color:#ffce81;}
 .ig-link:hover{color:var(--ember-2);}
 
 /* hero GIF: never wider than the screen — scales down to show the whole rig */
-#hero-gif{max-width:100%;object-fit:contain;}
+#hero-gif{max-width:100%;object-fit:contain;
+  /* subtle warm rim light from the skylights and windows, so the rig sits in the hall's light */
+  filter:drop-shadow(0 0 2.5px rgba(250,242,228,.28));}
 
 /* ───────────── responsive: tablet ───────────── */
 @media (max-width:1024px){
   section[id^="sec-"]{padding:32px 32px !important;}
+  #sec-contact{padding-bottom:0 !important;}
   /* equipment + commissions galleries: 3 columns, refilled evenly by js/main.js */
   #sec-capture div[style*="repeat(4,1fr)"]{grid-template-columns:repeat(3,1fr) !important;gap:10px !important;}
   #sec-capture div[style*="repeat(4,1fr)"] > div{gap:10px !important;}
@@ -171,6 +174,7 @@ a:hover{color:#ffce81;}
 
   /* section headers */
   section[id^="sec-"]{padding:28px 20px !important;}
+  #sec-contact{padding-bottom:0 !important;}
   [data-va-hdr] img{height:38px !important;}
   [data-va-hdr] h2{font-size:26px !important;}
 
