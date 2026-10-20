@@ -11,14 +11,25 @@
 <meta property="og:title" content="Visual Addicts — Boutique Digital Capture">
 <meta property="og:description" content="On-set tech support for the most versatile shoots &amp; campaigns. Barcelona.">
 <meta property="og:url" content="https://visualaddicts.tech/">
-<link rel="stylesheet" href="css/site.css?v=21">
+<link rel="stylesheet" href="css/site.css?v=23">
+<link rel="stylesheet" href="css/motion.css?v=25">
+<script>
+(function(){var r=document.documentElement;
+if(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+r.classList.add('mo-on');
+r.classList.add('mo-va-shine');
+/* intro plays on every fresh load and every refresh; skipped when returning to the site with the browser's back/forward buttons */
+var nv=performance.getEntriesByType&&performance.getEntriesByType('navigation')[0];
+if(!(nv&&nv.type==='back_forward'))r.classList.add('mo-intro');})();
+</script>
 <link rel="preload" as="image" href="uploads/warehouse13.jpg">
 <link rel="preload" as="image" href="assets/hero-loop.gif">
 </head>
 <body>
+<div id="mo-intro" aria-hidden="true"><div class="mo-box"><div class="mo-lock"><img src="assets/logo-lockup-aligned.png" alt=""><div class="mo-sheen mo-sheen-va"></div></div><div class="mo-tag"><img src="assets/intro-tagline.png" alt=""><div class="mo-sheen"></div></div></div></div>
 <div style="background:var(--surface-page);min-height:100vh;padding-top:72px">
 <header id="site-header" style="position:fixed;top:0;left:0;right:0;z-index:100;background:var(--surface-page);transition:transform var(--duration-standard) var(--ease-standard);height:72px;padding:0 18px;display:flex;gap:32px;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border-default)">
-<img id="logo-home" src="assets/logo-wordmark.png" style="height:47px;width:224px;flex-shrink:0;cursor:pointer" alt="Visual Addicts">
+<img id="logo-home" src="assets/logo-lockup-aligned.png" style="height:auto;width:224px;flex-shrink:0;cursor:pointer" alt="Visual Addicts">
 <div style="flex:1 1 auto;min-width:0;overflow:hidden;position:relative;right:-3px">
 <nav id="va-nav" aria-label="Site sections">
 <a href="#sec-capture">Digital Capture</a>
@@ -287,7 +298,7 @@
 </div>
 <div style="display:grid;grid-template-columns:200px 1fr;gap:32px;padding:20px 0;border-top:1px solid var(--border-default);align-items:baseline">
 <span style="font-family:var(--font-display);font-size:12px;letter-spacing:.24em;text-transform:uppercase;background-image:linear-gradient(180deg,#e7aa51,#ffe499,#8d5a1b,#ac7031);-webkit-background-clip:text;background-clip:text;color:transparent">Studio</span>
-<p style="color:rgba(248,245,239,.91);font-size:18px;line-height:1.7;margin:0;font-weight:300">c/o Unida Studio<br>c/Joaquin Costa 24 N2<br>08001 Barcelona<br>SPAIN</p>
+<p style="color:rgba(248,245,239,.91);font-size:18px;line-height:1.7;margin:0;font-weight:300">Unida Studio<br>c/Joaquin Costa 24 N2<br>08001 Barcelona<br>SPAIN</p>
 </div>
 </div>
 </div>
@@ -355,5 +366,7 @@
 </div>
 </div>
 <script src="js/main.js?v=39" defer></script>
+<script src="js/motion.js?v=23" defer></script>
+
 </body>
 </html>
