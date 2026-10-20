@@ -215,7 +215,7 @@ a:hover{color:#ffce81;}
 @keyframes va-hdr-fadein{from{opacity:0}to{opacity:1}}
 @keyframes va-shimmer{from{background-position:85% 0}to{background-position:12% 0}}
 @keyframes va-shimmer-end{to{background-image:none;background-color:transparent;color:var(--ivory)}}
-.va-anim-hdr img{animation:va-hdr-fadein 2880ms ease 500ms both}
+.va-anim-hdr img{animation:va-hdr-fadein 2448ms ease 500ms both}
 .va-anim-hdr h2,.va-anim-shimmer h2{
   background-color:var(--ivory) !important;
   background-image:linear-gradient(100deg,rgba(255,206,129,0) 44%,#ffce81 50%,rgba(255,206,129,0) 56%) !important;
@@ -225,9 +225,9 @@ a:hover{color:#ffce81;}
   background-clip:text !important;
   color:transparent !important;
   animation-name:va-shimmer,va-shimmer-end !important;
-  animation-duration:1296ms,1ms !important;
+  animation-duration:1300ms,1ms !important;
   animation-timing-function:linear,linear !important;
-  animation-delay:930ms,2226ms !important;
+  animation-delay:930ms,2230ms !important;
   animation-iteration-count:1,1 !important;
   animation-fill-mode:both,forwards !important;
 }

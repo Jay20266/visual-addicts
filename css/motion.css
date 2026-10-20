@@ -1,0 +1,246 @@
+/* Visual Addicts — motion layer (intro, text rise, picture reveal, lightbox) */
+
+/* 1 — intro: lockup fades in, then the tagline appears with a shimmer */
+#mo-intro{display:none;position:fixed;inset:0;z-index:1000;background:#050403;align-items:center;justify-content:center;pointer-events:none;transition:background-color 700ms cubic-bezier(.4,0,.2,1)}
+.mo-intro #mo-intro{display:flex}
+.mo-intro body{overflow:hidden}
+#mo-intro .mo-box{position:relative;flex:0 0 auto;width:min(81vw,792px);height:calc(min(81vw,792px) * 520 / 2587);margin:0;will-change:transform}
+#mo-intro .mo-box > div{position:absolute}
+#mo-intro .mo-box img{display:block;width:100%;height:100%}
+#mo-intro .mo-lock{left:15.230%;width:69.385%;top:0;height:64.231%;opacity:0;transition:opacity 1330ms ease}
+#mo-intro .mo-tag{left:0;width:100%;top:85.192%;height:14.808%;opacity:0;transition:opacity 1000ms ease}
+#mo-intro .mo-sheen{position:absolute;inset:0;
+  background:linear-gradient(100deg,rgba(255,228,153,0) 42%,rgba(255,244,210,1) 50%,rgba(255,228,153,0) 58%) no-repeat;
+  background-size:300% 100%;background-position:120% 0;
+  -webkit-mask-image:url('../assets/intro-tagline.png');mask-image:url('../assets/intro-tagline.png');
+  -webkit-mask-size:100% 100%;mask-size:100% 100%}
+#mo-intro .mo-sheen-va{display:none;inset:auto;left:26.741%;width:40.390%;top:0.599%;height:98.802%;
+  -webkit-mask-image:url('../assets/intro-va-mask.png');mask-image:url('../assets/intro-va-mask.png')}
+.mo-va-shine #mo-intro .mo-sheen-va{display:block;opacity:.7}   /* 30% softer than the tagline shimmer */
+#mo-intro.mo-show .mo-lock{opacity:1}
+#mo-intro.mo-tagin .mo-tag{opacity:1}
+#mo-intro.mo-sweep .mo-sheen{transition:background-position 1700ms linear;background-position:-20% 0}
+#mo-intro.mo-out{background-color:rgba(5,4,3,0)}
+#mo-intro.mo-out .mo-tag{opacity:0;transition:opacity 300ms ease}
+
+/* 3 — text rising in */
+.mo-rise{opacity:0;transition:opacity 1000ms ease}
+.mo-rise.mo-in{opacity:1}
+
+/* 4 — pictures fade up */
+.mo-pic{opacity:0;transform:translateY(28px);transition:opacity 1000ms ease,transform 1000ms cubic-bezier(.2,.6,.2,1)}
+.mo-pic.mo-in{opacity:1;transform:none}
+
+/* 7 — lightbox grows out of the picture */
+#lightbox.mo-lb{transition:background-color 380ms ease}
+#lightbox.mo-lb.mo-dim{background-color:rgba(255,255,255,0) !important}
+#lightbox.mo-lb .lb-ctl{transition:opacity 300ms ease,color 150ms ease}
+#lightbox.mo-lb.mo-dim .lb-ctl{opacity:0}
+#lightbox-img.mo-fly{transition:transform 480ms cubic-bezier(.4,0,.2,1)}
+#lightbox-img.mo-step{transition:transform 320ms cubic-bezier(.4,0,.2,1),opacity 320ms ease}
+
+@media (prefers-reduced-motion: reduce){
+  #mo-intro{display:none !important}
+  .mo-rise,.mo-pic{opacity:1 !important;transform:none !important}
+}
+
+/* 5 — gold line draws under each category heading */
+[data-va-hdr]{position:relative}
+.mo-rule{position:absolute;left:0;bottom:-12px;height:1px;width:100%;max-width:520px;
+  background:linear-gradient(90deg,#e7aa51,#ffe499 40%,#ac7031 80%,rgba(172,112,49,0));
+  transform:scaleX(0);transform-origin:0 50%;transition:transform 1300ms cubic-bezier(.4,0,.2,1);pointer-events:none}
+.mo-rule.mo-in{transform:scaleX(1);transition-delay:0ms}
+/* heading shimmer runs with the line: both start 0.5 s after the heading comes into view, both end 1.3 s later */
+/* heading shimmer: fixed-width gold band (same size and brightness on every heading), swept from just before
+   the first letter to just past the last one; starts with the line (0.5 s) and ends with it (1.8 s) */
+html.mo-on .va-anim-shimmer h2{
+  background-image:linear-gradient(100deg,rgba(255,206,129,0) 0%,rgba(255,206,129,0) 22%,#ffce81 50%,rgba(255,206,129,0) 78%,rgba(255,206,129,0) 100%) !important;
+  background-size:var(--mo-band,220px) 100% !important;background-repeat:no-repeat !important;
+  animation-name:mo-hshim,va-shimmer-end !important;animation-timing-function:linear,linear !important;
+  animation-delay:0ms,1300ms !important;animation-duration:1300ms,1ms !important}
+@keyframes mo-hshim{from{background-position:calc(var(--mo-band,220px) * -1) 0}to{background-position:var(--mo-tw,600px) 0}}
+/* the click class alone never runs the shimmer — motion.js starts it once the page has finished scrolling */
+html.mo-on .va-anim-hdr:not(.va-anim-shimmer) h2,
+html.mo-navscroll .va-anim-shimmer h2{animation:none !important;background:none !important;color:var(--ivory) !important}
+
+/* 8 — custom cursor (fine pointers only); style picked by data-cur on <html> */
+@media (hover:hover) and (pointer:fine){
+  .mo-cursor-on, .mo-cursor-on *{cursor:none !important}
+  #mo-cursor{position:fixed;left:0;top:0;z-index:2000;pointer-events:none;width:0;height:0;transition:opacity 200ms ease}
+  #mo-cursor.mo-hide{opacity:0}
+  #mo-cursor .mo-c{position:absolute;display:none}
+  #mo-trail{position:fixed;inset:0;z-index:1999;pointer-events:none;display:none}
+  [data-cur="trail"] #mo-trail,[data-cur="cable"] #mo-trail{display:block}
+
+  /* 1 — V/A mark: the logo itself is the pointer */
+  [data-cur="mark"] #mo-cursor .mo-mark{display:block;left:-2px;top:-2px;width:34px;height:16px;
+    background:url('../assets/va-mark-aligned.png') 0 0/contain no-repeat;
+    filter:drop-shadow(0 1px 2px rgba(0,0,0,.8));transition:transform 240ms cubic-bezier(.4,0,.2,1),filter 240ms ease}
+  #mo-cursor.mo-link .mo-mark{transform:scale(1.25);filter:drop-shadow(0 1px 2px rgba(0,0,0,.8)) hue-rotate(-20deg) saturate(1.7) brightness(1.1)}
+
+  /* 2 — gold slash: only the "/" of V/A, tilting upright over links */
+  [data-cur="slash"] #mo-cursor .mo-slash{display:block;left:-1px;top:-11px;width:2px;height:22px;
+    background:linear-gradient(180deg,#e7aa51,#ffe499 30%,#8d5a1b 65%,#ac7031);
+    transform:rotate(24deg);transform-origin:50% 50%;transition:transform 240ms cubic-bezier(.4,0,.2,1),background 240ms ease}
+  #mo-cursor.mo-link .mo-slash{transform:rotate(0deg) scaleY(1.25);background:linear-gradient(45deg,#ff7a3c,#ffce81)}
+
+  /* 3 — aperture: a six-blade iris that opens over links */
+  [data-cur="iris"] #mo-cursor .mo-iris{display:block;left:-12px;top:-12px;width:24px;height:24px;
+    transition:transform 320ms cubic-bezier(.4,0,.2,1)}
+  .mo-iris svg{display:block;width:100%;height:100%;overflow:visible}
+  .mo-iris .blades{transition:transform 320ms cubic-bezier(.4,0,.2,1);transform-origin:12px 12px}
+  .mo-iris .ap{transition:r 320ms cubic-bezier(.4,0,.2,1),stroke 240ms ease}
+  #mo-cursor.mo-link .mo-iris{transform:rotate(30deg)}
+  #mo-cursor.mo-link .mo-iris .ap{r:7;stroke:#ff7a3c}
+
+  /* 4 — light-meter needle: a gold hairline that swings with your speed */
+  [data-cur="needle"] #mo-cursor .mo-needle{display:block;left:-1px;top:-18px;width:1px;height:18px;
+    background:linear-gradient(0deg,#e7aa51,rgba(231,170,81,0));transform-origin:50% 100%}
+  [data-cur="needle"] #mo-cursor .mo-pivot{display:block;left:-3px;top:-3px;width:6px;height:6px;border:1px solid #e7aa51;box-sizing:border-box;transition:transform 220ms ease,border-color 220ms ease}
+  #mo-cursor.mo-link .mo-pivot{transform:rotate(45deg) scale(1.4);border-color:#ff7a3c}
+
+  /* 5 — exposure trail: short gold light-trail behind a tiny hairline cross */
+  [data-cur="trail"] #mo-cursor .mo-tip{display:block;left:-5px;top:-5px;width:10px;height:10px}
+  .mo-tip::before,.mo-tip::after{content:"";position:absolute;background:#ffe499}
+  .mo-tip::before{left:4.5px;top:0;width:1px;height:10px}
+  .mo-tip::after{top:4.5px;left:0;height:1px;width:10px}
+  #mo-cursor.mo-link .mo-tip::before,#mo-cursor.mo-link .mo-tip::after{background:#ff7a3c}
+
+  /* 6 — film frame: a tiny 3:2 frame with sprocket ticks */
+  [data-cur="film"] #mo-cursor .mo-film{display:block;left:-12px;top:-8px;width:24px;height:16px;border:1px solid #e7aa51;box-sizing:border-box;
+    background:
+      linear-gradient(90deg,#e7aa51 0 2px,transparent 2px 5px) 1px 1px/5px 1px repeat-x,
+      linear-gradient(90deg,#e7aa51 0 2px,transparent 2px 5px) 1px calc(100% - 1px)/5px 1px repeat-x;
+    transition:transform 240ms cubic-bezier(.4,0,.2,1),border-color 240ms ease}
+  #mo-cursor.mo-link .mo-film{transform:scale(1.3);border-color:#ff7a3c}
+
+  /* 7 — focus peaking: the slash ringed by a soft red/gold "in focus" shimmer */
+  [data-cur="peak"] #mo-cursor .mo-peak{display:block;left:-10px;top:-10px;width:20px;height:20px;border-radius:50%;
+    background:conic-gradient(from 0deg,#e7aa51,#ffe499,#ff7a3c,#e7aa51,#8d5a1b,#e7aa51);
+    -webkit-mask:radial-gradient(circle,transparent 7.5px,#000 8px,#000 9px,transparent 9.5px);
+            mask:radial-gradient(circle,transparent 7.5px,#000 8px,#000 9px,transparent 9.5px);
+    animation:mo-spin 2.4s linear infinite;transition:transform 260ms cubic-bezier(.4,0,.2,1)}
+  [data-cur="peak"] #mo-cursor .mo-peakdot{display:block;left:-1px;top:-1px;width:2px;height:2px;background:#ffe499}
+  #mo-cursor.mo-link .mo-peak{transform:scale(1.5);animation-duration:.9s}
+  @keyframes mo-spin{to{transform:rotate(360deg)}}
+
+  /* 8 — histogram: a tiny live histogram that redraws as you move */
+  [data-cur="histo"] #mo-cursor .mo-histo{display:flex;align-items:flex-end;gap:1px;left:-12px;top:-14px;width:24px;height:14px;border-bottom:1px solid #e7aa51}
+  .mo-histo i{display:block;flex:1;background:#e7aa51;transition:height 140ms ease,background 200ms ease}
+  #mo-cursor.mo-link .mo-histo i{background:#ff7a3c}
+
+  /* 9 — rule of thirds: a small 3×3 composition grid */
+  [data-cur="thirds"] #mo-cursor .mo-thirds{display:block;left:-12px;top:-8px;width:24px;height:16px;
+    border:1px solid rgba(231,170,81,.85);box-sizing:border-box;
+    background:
+      linear-gradient(90deg,transparent calc(33.33% - .5px),rgba(231,170,81,.6) calc(33.33% - .5px) calc(33.33% + .5px),transparent calc(33.33% + .5px) calc(66.66% - .5px),rgba(231,170,81,.6) calc(66.66% - .5px) calc(66.66% + .5px),transparent calc(66.66% + .5px)),
+      linear-gradient(0deg,transparent calc(33.33% - .5px),rgba(231,170,81,.6) calc(33.33% - .5px) calc(33.33% + .5px),transparent calc(33.33% + .5px) calc(66.66% - .5px),rgba(231,170,81,.6) calc(66.66% - .5px) calc(66.66% + .5px),transparent calc(66.66% + .5px));
+    transition:transform 240ms cubic-bezier(.4,0,.2,1),border-color 240ms ease}
+  #mo-cursor.mo-link .mo-thirds{transform:scale(1.35);border-color:#ff7a3c}
+
+  /* 10 — shutter count: a gold counter that ticks up on every click */
+  [data-cur="count"] #mo-cursor .mo-count{display:block;left:8px;top:6px;font-family:var(--font-display);font-size:9px;letter-spacing:.14em;color:#e7aa51;white-space:nowrap}
+  [data-cur="count"] #mo-cursor .mo-cdot{display:block;left:-3px;top:-3px;width:6px;height:6px;border:1px solid #e7aa51;box-sizing:border-box;transition:transform 160ms ease,border-color 200ms ease}
+  #mo-cursor.mo-link .mo-cdot{border-color:#ff7a3c;transform:scale(1.4)}
+  #mo-cursor.mo-click .mo-cdot{transform:scale(.4)}
+
+  /* 11 — white balance: the cursor's tone shifts warm↔cool across the screen width */
+  [data-cur="wb"] #mo-cursor .mo-wb{display:block;left:-9px;top:-9px;width:18px;height:18px;border-radius:50%;box-sizing:border-box;border:1px solid var(--wb,#e7aa51)}
+  [data-cur="wb"] #mo-cursor .mo-wbk{display:block;left:-8px;top:10px;font-family:var(--font-display);font-size:8px;letter-spacing:.12em;color:var(--wb,#e7aa51);white-space:nowrap}
+  #mo-cursor.mo-link .mo-wb{transform:scale(1.4)}
+
+  /* 12 — flash: crisp hairline cross; every click fires a soft gold flash ring */
+  [data-cur="flash"] #mo-cursor .mo-tip{display:block;left:-5px;top:-5px;width:10px;height:10px}
+  .mo-burst{position:fixed;z-index:1998;pointer-events:none;width:12px;height:12px;margin:-6px 0 0 -6px;border-radius:50%;
+    border:1px solid #ffe499;animation:mo-burst 520ms cubic-bezier(.2,.6,.2,1) forwards}
+  @keyframes mo-burst{0%{transform:scale(.4);opacity:1;box-shadow:0 0 0 0 rgba(255,228,153,.35)}100%{transform:scale(4.5);opacity:0;box-shadow:0 0 14px 4px rgba(255,228,153,0)}}
+
+  /* 13 — bokeh: soft out-of-focus gold discs drift after the pointer */
+  [data-cur="bokeh"] #mo-cursor .mo-tip{display:block;left:-5px;top:-5px;width:10px;height:10px}
+  .mo-bok{position:fixed;z-index:1998;pointer-events:none;border-radius:50%;
+    background:radial-gradient(circle,rgba(255,228,153,.0) 35%,rgba(255,228,153,.55) 62%,rgba(231,170,81,.15) 72%,rgba(231,170,81,0) 74%);
+    animation:mo-bok 1400ms ease-out forwards}
+  @keyframes mo-bok{0%{opacity:.9;transform:scale(.5)}100%{opacity:0;transform:scale(1.4) translateY(-10px)}}
+
+  /* 14 — zebra: a hatched square, like a camera's overexposure warning */
+  [data-cur="zebra"] #mo-cursor .mo-zebra{display:block;left:-9px;top:-9px;width:18px;height:18px;border:1px solid #e7aa51;box-sizing:border-box;
+    background:repeating-linear-gradient(45deg,rgba(231,170,81,.8) 0 1px,transparent 1px 4px);background-size:200% 200%;
+    animation:mo-zeb 1.2s linear infinite;transition:transform 240ms cubic-bezier(.4,0,.2,1),border-color 240ms ease}
+  @keyframes mo-zeb{to{background-position:11px 0}}
+  #mo-cursor.mo-link .mo-zebra{transform:scale(1.3);border-color:#ff7a3c;
+    background:repeating-linear-gradient(45deg,rgba(255,122,60,.85) 0 1px,transparent 1px 4px);background-size:200% 200%}
+
+  /* 15 — horizon level: a hairline that tilts with your movement and snaps level when you stop */
+  [data-cur="level"] #mo-cursor .mo-level{display:block;left:-14px;top:0;width:28px;height:1px;background:#e7aa51;transform-origin:50% 50%}
+  [data-cur="level"] #mo-cursor .mo-lvdot{display:block;left:-2px;top:-2px;width:5px;height:5px;border-radius:50%;border:1px solid #e7aa51;box-sizing:border-box;transition:border-color 200ms ease,background 200ms ease}
+  #mo-cursor.mo-level-ok .mo-level{background:#ffe499}
+  #mo-cursor.mo-level-ok .mo-lvdot{background:#ffe499;border-color:#ffe499}
+  #mo-cursor.mo-link .mo-level{background:#ff7a3c}
+
+  /* 16 — tether cable: a gold cable that trails from the pointer with a little weight */
+  [data-cur="cable"] #mo-cursor .mo-plug{display:block;left:-3px;top:-4px;width:6px;height:8px;border:1px solid #e7aa51;box-sizing:border-box;transition:border-color 200ms ease,transform 200ms ease}
+  #mo-cursor.mo-link .mo-plug{border-color:#ff7a3c;transform:scale(1.3)}
+
+  /* 17 — lens flare: hexagon ghosts strung along a line through the screen centre */
+  [data-cur="flare"] #mo-cursor .mo-tip{display:block;left:-5px;top:-5px;width:10px;height:10px}
+  .mo-ghost{position:fixed;z-index:1998;pointer-events:none;display:none;
+    clip-path:polygon(25% 6%,75% 6%,100% 50%,75% 94%,25% 94%,0 50%);background:rgba(255,228,153,.12);border:0}
+  [data-cur="flare"] .mo-ghost{display:block}
+
+  /* 18 — self-timer: a ring that fills up while you rest on something clickable */
+  [data-cur="timer"] #mo-cursor .mo-timer{display:block;left:-11px;top:-11px;width:22px;height:22px}
+  .mo-timer svg{display:block;width:100%;height:100%;transform:rotate(-90deg)}
+  .mo-timer .bg{stroke:rgba(231,170,81,.45)}
+  .mo-timer .fg{stroke:#ff7a3c;stroke-dasharray:63;stroke-dashoffset:63}
+  #mo-cursor.mo-link .mo-timer .fg{transition:stroke-dashoffset 900ms linear;stroke-dashoffset:0}
+  [data-cur="timer"] #mo-cursor .mo-tdot{display:block;left:-1px;top:-1px;width:2px;height:2px;background:#e7aa51}
+
+  /* shutter-count variations */
+  #mo-cursor .mo-sc{display:none;position:absolute;font-family:var(--font-display);color:#e7aa51;white-space:nowrap;letter-spacing:.14em;font-size:9px;line-height:1}
+  #mo-cursor.mo-link .mo-sc{color:#ff7a3c}
+  .mo-scsq{position:absolute;display:none;left:-3px;top:-3px;width:6px;height:6px;border:1px solid #e7aa51;box-sizing:border-box;transition:transform 160ms ease,border-color 200ms ease}
+  #mo-cursor.mo-link .mo-scsq{border-color:#ff7a3c;transform:scale(1.4)}
+  #mo-cursor.mo-click .mo-scsq{transform:scale(.4)}
+  [data-cur^="sc-"] #mo-cursor .mo-scsq{display:block}
+
+  /* B — file name: the counter is a capture file name */
+  [data-cur="sc-file"] #mo-cursor .mo-scfile{display:block;left:9px;top:6px}
+  /* C — film counter: frames left on a roll of 36, counting down */
+  [data-cur="sc-film"] #mo-cursor .mo-scfilm{display:block;left:9px;top:5px;padding:2px 3px;border:1px solid currentColor;font-size:8px}
+  /* D — viewfinder readout: exposure settings + shot number */
+  [data-cur="sc-exif"] #mo-cursor .mo-scexif{display:block;left:9px;top:6px;font-size:8px;letter-spacing:.1em}
+  [data-cur="sc-exif"] #mo-cursor .mo-scexif b{font-weight:400;color:#ffe499}
+  /* E — rolling counter: digits roll up like a mechanical counter */
+  [data-cur="sc-roll"] #mo-cursor .mo-scroll{display:flex;left:9px;top:5px;height:10px;overflow:hidden;gap:1px}
+  .mo-scroll span{display:block;width:6px;height:10px;overflow:hidden;position:relative}
+  .mo-scroll span i{display:block;font-style:normal;position:absolute;left:0;top:0;line-height:10px;text-align:center;width:6px;transition:transform 380ms cubic-bezier(.4,0,.2,1)}
+  /* F — focus frame with the count inside */
+  [data-cur="sc-frame"] #mo-cursor .mo-scsq{display:none}
+  [data-cur="sc-frame"] #mo-cursor .mo-scframe{display:flex;align-items:center;justify-content:center;left:-17px;top:-9px;width:34px;height:18px;font-size:8px;
+    background:
+      linear-gradient(currentColor,currentColor) 0 0/5px 1px no-repeat, linear-gradient(currentColor,currentColor) 0 0/1px 5px no-repeat,
+      linear-gradient(currentColor,currentColor) 100% 0/5px 1px no-repeat, linear-gradient(currentColor,currentColor) 100% 0/1px 5px no-repeat,
+      linear-gradient(currentColor,currentColor) 0 100%/5px 1px no-repeat, linear-gradient(currentColor,currentColor) 0 100%/1px 5px no-repeat,
+      linear-gradient(currentColor,currentColor) 100% 100%/5px 1px no-repeat, linear-gradient(currentColor,currentColor) 100% 100%/1px 5px no-repeat;
+    transition:transform 160ms ease}
+  #mo-cursor.mo-click .mo-scframe{transform:scale(.85)}
+  /* G — rec: blinking dot + shot label, like a tethering session */
+  [data-cur="sc-rec"] #mo-cursor .mo-scsq{border-radius:50%;background:#e7aa51;animation:mo-blink 1.4s steps(1) infinite}
+  #mo-cursor.mo-link .mo-scsq{background:#ff7a3c}
+  [data-cur="sc-rec"] #mo-cursor .mo-screc{display:block;left:9px;top:6px}
+  @keyframes mo-blink{50%{opacity:.25}}
+}
+
+/* 2 — header: a gold hairline draws along its bottom edge once you scroll past the hero */
+html.mo-on #site-header::after{content:"";position:absolute;left:0;right:0;bottom:0;height:1px;pointer-events:none;
+  background:linear-gradient(90deg,rgba(172,112,49,0),#e7aa51 18%,#ffe499 50%,#e7aa51 82%,rgba(172,112,49,0));
+  transform:scaleX(0);transform-origin:50% 50%;transition:transform 900ms cubic-bezier(.4,0,.2,1)}
+html.mo-on.mo-solid #site-header::after{transform:scaleX(1)}
+
+/* 7 — clients wall: the logo nearest the pointer takes the PHONE / EMAIL / STUDIO gold gradient, then fades back */
+@media (hover:hover) and (pointer:fine){
+  .mo-goldlay{position:absolute;pointer-events:none;opacity:0;transition:opacity 1100ms ease;
+    background:linear-gradient(180deg,#e7aa51,#ffe499,#8d5a1b,#ac7031);
+    -webkit-mask-size:100% 100%;mask-size:100% 100%;-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;mask-mode:luminance}
+  .mo-goldlay.mo-on{opacity:1;transition:opacity 220ms ease}
+}
