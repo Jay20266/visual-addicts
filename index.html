@@ -2,6 +2,13 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
+<script>
+/* always open at the top: on refresh the browser would otherwise jump back to the last scroll position */
+if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+if (location.hash) history.replaceState(null, '', location.pathname + location.search);
+window.addEventListener('pageshow', function () { window.scrollTo(0, 0); });
+window.addEventListener('beforeunload', function () { window.scrollTo(0, 0); });
+</script>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Visual Addicts — Boutique Digital Capture, Barcelona</title>
 <meta name="description" content="Visual Addicts is a boutique digital capture studio in Barcelona: on-set tech support, digital workflows, color management, streaming solutions and equipment rental for high-end photo productions.">
