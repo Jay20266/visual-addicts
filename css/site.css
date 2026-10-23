@@ -93,16 +93,27 @@ a:hover{color:#ffce81;}
   -webkit-background-clip:text;
   background-clip:text;
   color:transparent;
+  -webkit-text-fill-color:transparent;
+  /* Safari paints a hairline of the gradient at the box's left/right edge; keep the gradient
+     1px clear of both edges (padding keeps the letters inside it, margin keeps spacing unchanged) */
+  display:inline-block;
+  padding:0 2px;
+  margin:0 -2px;
+  background-size:calc(100% - 2px) 100%;
+  background-position:50% 0;
+  background-repeat:no-repeat;
+  -webkit-backface-visibility:hidden;
+  backface-visibility:hidden;
   opacity:.9;
   line-height:1.3;
-  transform:scale(1);
+  transform:scale(1) translateZ(0);
   transform-origin:center center;
   transition:transform var(--duration-fast) var(--ease-standard);
 }
-#va-nav a.active{background-image:var(--gradient-ember);transform:scale(1.06);}
+#va-nav a.active{background-image:var(--gradient-ember);transform:scale(1.06) translateZ(0);}
 @media (hover:hover){
-  #va-nav:hover a.active:not(:hover){background-image:var(--gradient-gold);transform:scale(1);}
-  #va-nav a:hover{background-image:var(--gradient-ember);transform:scale(1.06);}
+  #va-nav:hover a.active:not(:hover){background-image:var(--gradient-gold);transform:scale(1) translateZ(0);}
+  #va-nav a:hover{background-image:var(--gradient-ember);transform:scale(1.06) translateZ(0);}
 }
 #va-nav a{-webkit-tap-highlight-color:transparent;touch-action:manipulation;}
 
