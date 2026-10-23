@@ -21,7 +21,7 @@
     var hero = document.getElementById('hero');
     var gif = document.getElementById('hero-gif');
     if (!hero || !gif) return;
-    var BG = 'uploads/warehouse13.jpg', GIF = 'assets/hero-loop.gif';
+    var BG = 'uploads/studio1.jpg', GIF = 'assets/hero-loop.gif';
     function load(src) {
       return new Promise(function (res) {
         var im = new Image();
@@ -36,7 +36,7 @@
     var FLOOR = 1034 / 1154, RATIO = 1639 / 1154;
     var shadow = document.createElement('img');
     shadow.alt = ''; shadow.setAttribute('aria-hidden', 'true');
-    shadow.style.cssText = 'position:absolute;pointer-events:none;object-fit:contain;filter:brightness(0) blur(38px);opacity:.3;visibility:hidden;z-index:0';
+    shadow.style.cssText = 'position:absolute;pointer-events:none;object-fit:contain;filter:brightness(0) blur(55px);opacity:.22;visibility:hidden;z-index:0';
     hero.style.position = 'relative';
     gif.style.position = 'relative'; gif.style.zIndex = '1';
     hero.insertBefore(shadow, gif);
@@ -52,6 +52,9 @@
       shadow.style.transform = 'translateY(' + Math.max(2, ch * 0.006) + 'px) scaleY(0.07)';
     }
     window.addEventListener('resize', placeShadow);
+    gif.addEventListener('load', placeShadow);
+    if ('ResizeObserver' in window) { var ro = new ResizeObserver(placeShadow); ro.observe(gif); ro.observe(hero); }
+    if ('MutationObserver' in window) new MutationObserver(placeShadow).observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
     Promise.all([load(BG), load(GIF)]).then(function () {
       requestAnimationFrame(function () {
         hero.style.backgroundImage = "url('" + BG + "')";
