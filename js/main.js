@@ -36,7 +36,7 @@
     var FLOOR = 1034 / 1154, RATIO = 1639 / 1154;
     var shadow = document.createElement('img');
     shadow.alt = ''; shadow.setAttribute('aria-hidden', 'true');
-    shadow.style.cssText = 'position:absolute;pointer-events:none;object-fit:contain;filter:brightness(0) blur(72px);opacity:.22;visibility:hidden;z-index:0';
+    shadow.style.cssText = 'position:absolute;pointer-events:none;object-fit:contain;filter:brightness(0) blur(100px);opacity:.22;visibility:hidden;z-index:0';
     hero.style.position = 'relative';
     gif.style.position = 'relative'; gif.style.zIndex = '1';
     hero.insertBefore(shadow, gif);
@@ -50,8 +50,8 @@
       shadow.style.height = bh + 'px';
       shadow.style.transformOrigin = '50% ' + (top + ch * FLOOR) + 'px';
       shadow.style.transform = 'translateY(' + Math.max(2, ch * 0.006) + 'px) scaleY(0.07)';
-      shadow.style.filter = window.innerWidth <= 700 ? 'brightness(0) blur(102px)' : 'brightness(0) blur(72px)';
-      shadow.style.opacity = window.innerWidth <= 700 ? '.22' : '.24';   /* computers + iPads */   /* phones: 85% more blur */
+      shadow.style.filter = window.innerWidth <= 700 ? 'brightness(0) blur(102px)' : 'brightness(0) blur(100px)';
+      shadow.style.opacity = window.innerWidth <= 700 ? '.22' : '.32';   /* computers + iPads */   /* phones: 85% more blur */
     }
     window.addEventListener('resize', placeShadow);
     gif.addEventListener('load', placeShadow);
